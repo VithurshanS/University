@@ -1,0 +1,60 @@
+%% University Management System ERD (Mermaid)
+erDiagram
+    USERS {
+        LONG id PK
+        string firstName
+        string lastName
+        string username
+        string password
+        string role
+    }
+
+    DEPARTMENT {
+        LONG id PK
+        string name
+    }
+
+    LECTURER {
+        LONG id PK FK_USERS
+    }
+
+    STUDENT {
+        LONG id PK FK_USERS
+    }
+
+    ADMIN {
+        LONG id PK FK_USERS
+    }
+
+    MODULE {
+        LONG id PK
+        string name
+        string code
+        int credits
+        int hours
+        LONG created_by FK_USERS
+        LONG lecturer_id FK_LECTURER
+        LONG department_id FK_DEPARTMENT
+    }
+
+    ENROLLMENT {
+        LONG id PK
+        LONG student_id FK_STUDENT
+        LONG module_id FK_MODULE
+        date enrollmentDate
+    }
+
+    %% Relationships
+    USERS ||--|| LECTURER : "one-to-one (shared PK)"
+    USERS ||--|| STUDENT : "one-to-one (shared PK)"
+    USERS ||--|| ADMIN : "one-to-one (shared PK)"
+
+    DEPARTMENT ||--o{ LECTURER : "has"
+    DEPARTMENT ||--o{ STUDENT : "has"
+    DEPARTMENT ||--o{ MODULE : "offers"
+
+    LECTURER ||--o{ MODULE : "teaches"
+    MODULE ||--o{ ENROLLMENT : "has"
+    STUDENT ||--o{ ENROLLMENT : "enrolls"
+
+    MODULE }o--|| USERS : "created by"
